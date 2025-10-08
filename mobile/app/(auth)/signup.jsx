@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import styles from "../../assets/styles/signup.styles";
 import { useRouter } from "expo-router";
@@ -15,15 +16,16 @@ import {
   ActivityIndicator,
 } from "react-native";
 import COLORS from "../../constants/colors";
+import { useAuthStore } from "../../store/authStore";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [username, setUserName] = useState("");
+  const {user, isLoading, register} = useAuthStore();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigation = useRouter();
   const passwordInputRef = useRef(null);
@@ -31,15 +33,15 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      setLoading(true);
       setError("");
-      // Add your signup logic here
-      // On success, navigate to the main app screen
+      const result = await register({ email, password, username });
+      if (!result.success) {
+        setError("Signup failed. Please try again.");
+        Alert.alert("Signup Error", "Signup failed. Please try again.");
+      }
       navigation.replace("/home");
     } catch (err) {
       setError("Signup failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -69,6 +71,32 @@ export default function Signup() {
               {error ? <Text style={styles.errorText}>{error}</Text> : null}
             </View>
             <View style={styles.inputGroup}>
+              <Text style={styles.label}>Username</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons
+                  name="person-outline"
+                  size={20}
+                  color={COLORS.icon}
+                  style={styles.inputIcon}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your username" 
+                  placeholderTextColor={COLORS.placeholder}
+                  keyboardType="default"
+                  autoCapitalize="none"
+                  value={username}
+                  onChangeText={setUserName}
+                  editable={!isLoading}   
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    passwordInputRef.current?.focus();
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.inputGroup}>
               <Text style={styles.label}>Email</Text>
               <View style={styles.inputContainer}>
                 <Ionicons
@@ -86,7 +114,7 @@ export default function Signup() {
                   autoCapitalize="none"
                   value={email}
                   onChangeText={setEmail}
-                  editable={!loading}
+                  editable={!isLoading}
                   returnKeyType="next"
                   onSubmitEditing={() => {
                     passwordInputRef.current?.focus();
@@ -112,7 +140,7 @@ export default function Signup() {
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
-                  editable={!loading}
+                  editable={!isLoading}
                   returnKeyType="next"
                   onSubmitEditing={() => {
                     confirmPasswordInputRef.current?.focus();
@@ -120,7 +148,7 @@ export default function Signup() {
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   <Ionicons
                     name={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -148,13 +176,13 @@ export default function Signup() {
                   secureTextEntry={!showConfirmPassword}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  editable={!loading}
+                  editable={!isLoading}
                   returnKeyType="done"
                   onSubmitEditing={handleSignup}
                 />
                 <TouchableOpacity
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   <Ionicons
                     name={
@@ -170,9 +198,9 @@ export default function Signup() {
             <TouchableOpacity
               style={styles.button}
               onPress={handleSignup}
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <ActivityIndicator size="small" color={COLORS.white} />
               ) : (
                 <>
