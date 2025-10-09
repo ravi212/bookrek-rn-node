@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import styles from "../../assets/styles/login.styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,27 +17,28 @@ import {
 } from "react-native";
 import COLORS from "../../constants/colors";
 import { useRouter } from "expo-router";
+import { useAuthStore } from "../../store/authStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigation = useRouter();
   const passwordInputRef = useRef(null);
+  const {user, isLoading, login} = useAuthStore();
 
   const handleLogin = async () => {
     try {
-      setLoading(true);
       setError("");
-      // Add your login logic here
-      // On success, navigate to the main app screen
+      const result = await login({ email, password });
+      if (!result.success) {
+        setError("Login failed. Please try again.");
+        Alert.alert("Login Error", "Login failed. Please try again.");
+      }
       navigation.replace("/home");
     } catch (err) {
       setError("Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -81,7 +83,7 @@ export default function Login() {
                     autoCapitalize="none"
                     value={email}
                     onChangeText={setEmail}
-                    editable={!loading}
+                    editable={!isLoading}
                     returnKeyType="next"
                     onSubmitEditing={() => {
                       passwordInputRef.current?.focus();
@@ -106,13 +108,13 @@ export default function Login() {
                     secureTextEntry={!showPassword}
                     value={password}
                     onChangeText={setPassword}
-                    editable={!loading}
+                    editable={!isLoading}
                     returnKeyType="done"
                     onSubmitEditing={handleLogin}
                   />
                   <TouchableOpacity
                     onPress={() => setShowPassword(!showPassword)}
-                    disabled={loading}
+                    disabled={isLoading}
                   >
                     <Ionicons
                       name={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -126,9 +128,9 @@ export default function Login() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={handleLogin}
-                disabled={loading}
+                disabled={isLoading}
               >
-                {loading ? (
+                {isLoading ? (
                   <ActivityIndicator size="small" color={COLORS.white} />
                 ) : (
                   <>
