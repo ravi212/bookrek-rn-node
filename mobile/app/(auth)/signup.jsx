@@ -39,7 +39,7 @@ export default function Signup() {
         setError("Signup failed. Please try again.");
         Alert.alert("Signup Error", "Signup failed. Please try again.");
       }
-      navigation.replace("/home");
+      navigation.replace("/(tabs)");
     } catch (err) {
       setError("Signup failed. Please check your credentials.");
     }

@@ -7,7 +7,7 @@ export const useAuthStore = create((set) => ({
   register: async (userData) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${process.env.API_URL}/api/auth/register`, {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,8 @@ export const useAuthStore = create((set) => ({
   login: async (credentials) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${process.env.API_URL}/api/auth/login`, {
+      console.log("Login credentials:", credentials);
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +44,7 @@ export const useAuthStore = create((set) => ({
         body: JSON.stringify(credentials),
       });
       const data = await response.json();
-
+      console.log("Login response data:", data);
       if (!response.ok) {
         throw new Error("Login failed");
       }

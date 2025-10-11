@@ -4,7 +4,7 @@ import COLORS from "../../constants/colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabLayout = () => {
-    const insets = useSafeAreaInsets()
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
@@ -12,12 +12,12 @@ const TabLayout = () => {
         tabBarActiveTintColor: COLORS.primary,
         headerTintColor: { color: COLORS.textPrimary, fontWeight: "600" },
         headerShadowVisible: false,
-        tabBarStyle: { 
-            borderTopColor: COLORS.border, 
-            backgroundColor: COLORS.cardBackground,
-            height: 30 + insets.bottom,
-            paddingTop: 5,
-            paddingBottom: insets.bottom
+        tabBarStyle: {
+          borderTopColor: COLORS.border,
+          backgroundColor: COLORS.cardBackground,
+          height: 30 + insets.bottom,
+          paddingTop: 5,
+          paddingBottom: insets.bottom,
         },
         tabBarInactiveTintColor: COLORS.textSecondary,
         tabBarShowLabel: true,

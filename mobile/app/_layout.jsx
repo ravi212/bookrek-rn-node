@@ -1,4 +1,4 @@
-import { Redirect, Stack, useSegments } from "expo-router";
+import { Redirect, Stack, useRouter, useSegments } from "expo-router";
 import "../assets/global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SafeScreen from "../components/SafeScreen";
@@ -9,16 +9,25 @@ import { useEffect } from "react";
 export default function RootLayout() {
   const segments = useSegments();
   const {user, token, checkAuth} = useAuthStore();
-  
+  const router = useRouter();
   useEffect(() => {
     checkAuth();
   }, []);
 
   useEffect(() => {
+    if (segments.length === 0) return;
     const isAuthScreen = segments[0] === "(auth)";
     const isSignedIn = user && token;
-    if (!isAuthScreen && !isSignedIn) <Redirect href="(auth)" />;
-    else if (isAuthScreen && isSignedIn) <Redirect href="(tabs)" />;
+    console.log("User:", user);
+    console.log("Token:", token);
+    console.log("Segments:", segments);
+    console.log("Is Auth Screen:", isAuthScreen);
+    console.log("Is Signed In:", isSignedIn);
+        if (!isSignedIn && !isAuthScreen) {
+      router.replace("/(auth)"); // 👈 Imperative redirect
+    } else if (isSignedIn && isAuthScreen) {
+      router.replace("/(tabs)"); // 👈 Redirect authenticated user
+    }
   }, [user, token, segments]);
 
   return (

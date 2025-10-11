@@ -36,7 +36,7 @@ export default function Login() {
         setError("Login failed. Please try again.");
         Alert.alert("Login Error", "Login failed. Please try again.");
       }
-      navigation.replace("/home");
+      navigation.replace("/(tabs)");
     } catch (err) {
       setError("Login failed. Please check your credentials.");
     }
