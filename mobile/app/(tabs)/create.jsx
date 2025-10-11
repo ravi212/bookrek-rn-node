@@ -31,8 +31,6 @@ export default function Create() {
   const router = useRouter();
   const { token } = useAuthStore();
 
-  console.log(token);
-
   const pickImage = async () => {
     try {
       // request permission if needed
@@ -91,8 +89,14 @@ export default function Create() {
       const imageType = fileType ? `image/${fileType.toLowerCase()}` : "image/jpeg";
 
       const imageDataUrl = `data:${imageType};base64,${imageBase64}`;
-
-      const response = await fetch(`${process.env.API_BASE_URL}/books`, {
+      // console.log(JSON.stringify({
+      //     title,
+      //     caption,
+      //     rating: rating.toString(),
+      //     image: imageDataUrl,
+      //   }))
+      console.log(process.env.EXPO_PUBLIC_API_URL)
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/books`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -105,8 +109,9 @@ export default function Create() {
           image: imageDataUrl,
         }),
       });
-
+      console.log("Create post response:", response.ok);
       const data = await response.json();
+      console.log("Create post response:", data);
       if (!response.ok) throw new Error(data.message || "Something went wrong");
 
       Alert.alert("Success", "Your book recommendation has been posted!");

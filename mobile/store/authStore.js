@@ -7,7 +7,7 @@ export const useAuthStore = create((set) => ({
   register: async (userData) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/register`, {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
     try {
       console.log("Login credentials:", credentials);
-      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/login`, {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

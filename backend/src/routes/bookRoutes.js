@@ -24,13 +24,14 @@ router.post("/", protectedRoute, async (req, res) => {
         return result;
       }
     );
-    const newBook = {
+    const newBook = new Book({
       title,
       caption,
       image: uploadResponse.secure_url,
       rating,
       user: req.user._id,
-    };
+    });
+    await newBook.save();
     res.status(201).json({ book: newBook, msg: "Book added successfully" });
   } catch (error) {
     console.error("Error adding book:", error);
