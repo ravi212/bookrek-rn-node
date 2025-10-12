@@ -1,9 +1,8 @@
 mobile/node_modules
 mobile/.env
 mobile/.expo
-mobile/pakcage-lock.json
+mobile/package-lock.json
 backend/node_modules
 backend/.env
-backend/pakcage-lock.json
-
+backend/package-lock.json
 .DS_Store
