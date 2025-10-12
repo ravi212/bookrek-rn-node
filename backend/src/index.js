@@ -16,7 +16,7 @@ app.use('/static', express.static('public')); // Serve static files from the 'pu
 app.use('/api/auth', authRoutes); 
 app.use('/api/books', bookRoutes); // New book routes (make sure to create bookRoutes.js  
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
